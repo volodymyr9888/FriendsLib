@@ -1,0 +1,10 @@
+<!-- main scene -->
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.friendslib.MainController">
+    <Label text="Welcome to Library Management System" style="-fx-font-size: 18px;"/>
+    <Button text="Add Book" onAction="#handleAddBook"/>
+    <Button text="View All Books" onAction="#handleViewAllBooks"/>
+    <Button text="Logout" onAction="#handleLogout"/>
+</VBox>

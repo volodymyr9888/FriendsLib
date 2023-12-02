@@ -1,0 +1,14 @@
+<!-- add book scene -->
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.friendslib.AddBookController">
+    <Label text="Add a New Book" style="-fx-font-size: 18px;"/>
+    <Label text="Title:"/>
+    <TextField fx:id="titleField" promptText="Enter book title"/>
+    <Label text="Author:"/>
+    <TextField fx:id="authorField" promptText="Enter author"/>
+    <Button text="Add Book" onAction="#handleAddBook"/>
+    <Button text="Back" onAction="#handleBack"/>
+</VBox>
