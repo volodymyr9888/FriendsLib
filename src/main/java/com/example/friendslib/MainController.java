@@ -13,7 +13,8 @@ public class MainController {
 
     @FXML
     void handleAddBook(ActionEvent event) throws Exception {
-        clientApp.showAddBookScene();
+//        clientApp.showAddBookScene();
+        clientApp.showWelcomeScene();
     }
 
     @FXML
@@ -21,8 +22,8 @@ public class MainController {
         // Implement logic to view all books using clientApp.getLibraryClient()
     }
 
-    @FXML
+   /* @FXML
     void handleLogout(ActionEvent event) throws Exception {
         clientApp.showLoginScene();
-    }
+    }*/
 }

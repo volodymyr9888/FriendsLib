@@ -2,12 +2,14 @@ package com.example.friendslib;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class ClientApp extends Application {
-    private Stage primaryStage;
-    private LibraryClientImpl libraryClient;
+
+    private static Stage primaryStage;
+    private SceneManager sceneManager;
 
     public static void main(String[] args) {
         launch(args);
@@ -16,47 +18,49 @@ public class ClientApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        libraryClient = new LibraryClientImpl();
+        this.sceneManager = new SceneManager(primaryStage);
 
-        showLoginScene();
+        // Pass the SceneManager instance to the controllers
+        WelcomeController welcomeController = loadScene("WelcomeView.fxml");
+        welcomeController.setSceneManager(sceneManager);
+
+//        showWelcomeScene();
     }
 
-    public void showLoginScene() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginScene.fxml"));
-        Scene scene = new Scene(loader.load());
+    public void showWelcomeScene() {
+        sceneManager.switchScene("WelcomeView.fxml");
+    }
+
+    private <T> T loadScene(String fxmlFileName) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/friendslib/" + fxmlFileName));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Library Management System - Login");
+        primaryStage.setTitle("FriendsLib App");
         primaryStage.show();
 
-        LoginController loginController = loader.getController();
-        loginController.setClientApp(this);
+        return loader.getController();
     }
 
-    public void showMainScene() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScene.fxml"));
-        Scene scene = new Scene(loader.load());
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Library Management System - Main");
-        primaryStage.show();
+    public static class SceneManager {
 
-        MainController mainController = loader.getController();
-        mainController.setClientApp(this);
-    }
+        private final Stage primaryStage;
 
-    public void showAddBookScene() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("AddBookScene.fxml"));
-        Scene scene = new Scene(loader.load());
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Library Management System - Add Book");
-        primaryStage.show();
+        public SceneManager(Stage primaryStage) {
+            this.primaryStage = primaryStage;
+        }
 
-        AddBookController addBookController = loader.getController();
-        addBookController.setClientApp(this);
-    }
-
-    // Other methods for handling various scenes and actions
-
-    public LibraryClientImpl getLibraryClient() {
-        return libraryClient;
+        public void switchScene(String fxmlFileName) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/friendslib/" + fxmlFileName));
+                Parent root = loader.load();
+                Scene scene = new Scene(root);
+                primaryStage.setScene(scene);
+                primaryStage.setTitle("FriendsLib App");
+                primaryStage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
