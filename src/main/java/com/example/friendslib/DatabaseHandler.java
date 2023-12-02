@@ -1,17 +1,18 @@
 package com.example.friendslib;
 
 import java.sql.*;
+//import mysql
 
 public class DatabaseHandler {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/friendslib";
-    private static final String USERNAME = "your_username";
-    private static final String PASSWORD = "your_password";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "password";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
     }
 
-    public static void createUsersTable() {
+    public static boolean createUsersTable() {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "CREATE TABLE IF NOT EXISTS users ("
@@ -23,8 +24,10 @@ public class DatabaseHandler {
                              + "modified_at DATETIME)"
              )) {
             preparedStatement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -44,32 +47,50 @@ public class DatabaseHandler {
         }
     }
 
-    public static void registerUser(String fullName, String email, String password) {
+    public static boolean registerUser(User user) {
         try (Connection connection = getConnection()) {
-            // Insert user into the users table
-            try (PreparedStatement userStatement = connection.prepareStatement(
-                    "INSERT INTO users (full_name, email, password, created_at, modified_at) VALUES (?, ?, ?, NOW(), NOW())",
-                    Statement.RETURN_GENERATED_KEYS
-            )) {
-                userStatement.setString(1, fullName);
-                userStatement.setString(2, email);
-                userStatement.setString(3, password);
+            connection.setAutoCommit(false); // Begin transaction
+
+            // Insert user information
+            String insertUserQuery = "INSERT INTO users (full_name, email, password, created_at, modified_at) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement userStatement = connection.prepareStatement(insertUserQuery, Statement.RETURN_GENERATED_KEYS)) {
+                userStatement.setString(1, user.getFullName());
+                userStatement.setString(2, user.getEmail());
+                userStatement.setString(3, user.getPassword());
+                userStatement.setObject(4, user.getCreatedAt());
+                userStatement.setObject(5, user.getModifiedAt());
+
                 userStatement.executeUpdate();
 
-                // Get the generated user_id
-                ResultSet generatedKeys = userStatement.getGeneratedKeys();
-                int userId = -1;
-                if (generatedKeys.next()) {
-                    userId = generatedKeys.getInt(1);
+                // Retrieve the auto-generated user ID
+                try (ResultSet generatedKeys = userStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        user.setId(generatedKeys.getInt(1));
+                    } else {
+                        throw new SQLException("Failed to get the user ID after registration.");
+                    }
                 }
-
-                // You can add more logic here to handle the case where userId is -1
-
-                // Associate the user with books (optional)
-                associateUserWithBooks(userId, null /* or book_id */);
             }
+
+            // Insert user_roles information to assign the default role
+            String insertUserRoleQuery = "INSERT INTO user_roles (user_id, role_id, created_at, modified_at) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement userRoleStatement = connection.prepareStatement(insertUserRoleQuery)) {
+                // Assuming 'user' role has an ID of 1, adjust accordingly
+                userRoleStatement.setInt(1, user.getId());
+                userRoleStatement.setInt(2, 1); // Assuming 'user' role has an ID of 1, adjust accordingly
+                userRoleStatement.setObject(3, user.getCreatedAt());
+                userRoleStatement.setObject(4, user.getModifiedAt());
+
+                userRoleStatement.executeUpdate();
+            }
+
+            connection.commit(); // Commit the transaction
+            connection.setAutoCommit(true); // Reset auto-commit mode
+
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

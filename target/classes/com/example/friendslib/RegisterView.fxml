@@ -15,8 +15,8 @@
     </padding>
     <Label text="Register"/>
 
-    <TextField fx:id="fullNameField" promptText="Full Name" style="-fx-end-margin: 0 0 20 0;"/>
-    <TextField fx:id="emailField" promptText="Email" style="-fx-end-margin: 0 0 20 0;"/>
+    <TextField fx:id="fullNameField" promptText="Full Name"/>
+    <TextField fx:id="emailField" promptText="Email"/>
     <PasswordField fx:id="passwordField" promptText="Password" />
 
     <Button text="Register" onAction="#handleRegister"/>
