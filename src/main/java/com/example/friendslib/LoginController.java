@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 public class LoginController {
 
     @FXML
-    private TextField emailField;
+    private TextField usernameField;
 
     @FXML
     private PasswordField passwordField;
@@ -17,7 +17,7 @@ public class LoginController {
     @FXML
     private void handleLogin() {
         // Code to handle login
-        String email = emailField.getText();
+        String username = usernameField.getText();
         String password = passwordField.getText();
         // Perform authentication logic here
     }

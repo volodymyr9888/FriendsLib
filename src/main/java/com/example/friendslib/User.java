@@ -7,15 +7,15 @@ public class User {
 
     private int id;
     private String fullName;
-    private String email;
+    private String username;
     private String password;
     private List<Book> books; // Assuming a user can have multiple books
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public User(String fullName, String email, String password, List<Book> books, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public User(String fullName, String username, String password, List<Book> books, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.fullName = fullName;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.books = books;
         this.createdAt = createdAt;
@@ -40,12 +40,12 @@ public class User {
         this.fullName = fullName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

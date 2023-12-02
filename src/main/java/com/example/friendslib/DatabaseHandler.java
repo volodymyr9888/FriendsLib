@@ -17,8 +17,8 @@ public class DatabaseHandler {
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "CREATE TABLE IF NOT EXISTS users ("
                              + "id INT PRIMARY KEY AUTO_INCREMENT,"
-                             + "full_name TEXT,"
-                             + "email TEXT,"
+                             + "full_name TEXT,username"
+                             + " TEXT,"
                              + "password TEXT,"
                              + "created_at DATETIME,"
                              + "modified_at DATETIME)"
@@ -31,13 +31,13 @@ public class DatabaseHandler {
         }
     }
 
-    public static void registerUser(String fullName, String email, String password, int bookId) {
+    public static void registerUser(String fullName, String username, String password, int bookId) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO users (full_name, email, password, book_id, created_at, modified_at) VALUES (?, ?, ?, ?, NOW(), NOW())"
+                     "INSERT INTO users (full_name, username, password, book_id, created_at, modified_at) VALUES (?, ?, ?, ?, NOW(), NOW())"
              )) {
             preparedStatement.setString(1, fullName);
-            preparedStatement.setString(2, email);
+            preparedStatement.setString(2, username);
             preparedStatement.setString(3, password);
             preparedStatement.setInt(4, bookId);
 
@@ -52,10 +52,10 @@ public class DatabaseHandler {
             connection.setAutoCommit(false); // Begin transaction
 
             // Insert user information
-            String insertUserQuery = "INSERT INTO users (full_name, email, password, created_at, modified_at) VALUES (?, ?, ?, ?, ?)";
+            String insertUserQuery = "INSERT INTO users (full_name, username, password, created_at, modified_at) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement userStatement = connection.prepareStatement(insertUserQuery, Statement.RETURN_GENERATED_KEYS)) {
                 userStatement.setString(1, user.getFullName());
-                userStatement.setString(2, user.getEmail());
+                userStatement.setString(2, user.getUsername());
                 userStatement.setString(3, user.getPassword());
                 userStatement.setObject(4, user.getCreatedAt());
                 userStatement.setObject(5, user.getModifiedAt());
