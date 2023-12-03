@@ -15,7 +15,6 @@ public class WelcomeController {
     @FXML
     private void handleLogin() {
         // Switch to the Login view
-        System.out.println("test");
         if (sceneManager != null) {
             sceneManager.switchScene("LoginView.fxml");
         }

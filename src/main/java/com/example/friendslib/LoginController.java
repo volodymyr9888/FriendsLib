@@ -26,13 +26,13 @@ public class LoginController {
     @FXML
     private Label errorLabel;
 
-    @FXML
+    /*@FXML
     private void handleLogin() {
         // Code to handle login
         String username = usernameField.getText();
         String password = passwordField.getText();
         // Perform authentication logic here
-    }
+    }*/
 
     public void handleLogin(ActionEvent event) {
         String username = usernameField.getText();
@@ -49,7 +49,7 @@ public class LoginController {
         if (authenticatedUser != null) {
             // Successful login, navigate to the next scene
             System.out.println("Successful login");
-            loadScene("AddBookScene.fxml", event, authenticatedUser);
+            loadScene("LibraryView.fxml", event, authenticatedUser);
             // ...
         } else {
             // Invalid credentials, show an error message
@@ -95,6 +95,11 @@ public class LoginController {
             // If the controller is an instance of AddBookController, set the currentUser
             if (controller instanceof AddBookController) {
                 ((AddBookController) controller).setCurrentUser(authenticatedUser);
+            }
+
+            // If the controller is an instance of AddBookController, set the currentUser
+            if (controller instanceof LibraryController) {
+                ((LibraryController) controller).setCurrentUser(authenticatedUser);
             }
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
