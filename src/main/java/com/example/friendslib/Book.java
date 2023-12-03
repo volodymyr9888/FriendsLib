@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class Book {
 
     private int id;
+    private String title;
     private String author;
     private String year;
     private int wasAddedBy; // User ID who added the book
@@ -12,7 +13,19 @@ public class Book {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public Book(String author, String year, int wasAddedBy, int ownedBy, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public Book(String title, String author, String year, int wasAddedBy, int ownedBy, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.title = title;
+        this.author = author;
+        this.year = year;
+        this.wasAddedBy = wasAddedBy;
+        this.ownedBy = ownedBy;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
+
+    public Book(int id, String title, String author, String year, int wasAddedBy, int ownedBy, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.id = id;
+        this.title = title;
         this.author = author;
         this.year = year;
         this.wasAddedBy = wasAddedBy;
@@ -77,6 +90,14 @@ public class Book {
 
     public void setModifiedAt(LocalDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
 

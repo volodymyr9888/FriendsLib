@@ -2,6 +2,7 @@ package com.example.friendslib;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class User {
 
@@ -9,17 +10,29 @@ public class User {
     private String fullName;
     private String username;
     private String password;
+    private String hashedPassword;
     private List<Book> books; // Assuming a user can have multiple books
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public User(String fullName, String username, String password, List<Book> books, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public User(String fullName, String username, String rawPassword, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.fullName = fullName;
         this.username = username;
-        this.password = password;
-        this.books = books;
+        this.password = rawPassword;
+        this.hashedPassword = hashPassword(rawPassword);
+//        this.books = books;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
+    }
+
+
+    public User(int id, String fullName, String username, String rawPassword) {
+        this.id = id;
+        this.fullName = fullName;
+        this.username = username;
+        this.password = rawPassword;
+        this.hashedPassword = hashPassword(rawPassword);
+//        this.books = books;
     }
 
     // Getters and setters for all fields
@@ -56,6 +69,15 @@ public class User {
         this.password = password;
     }
 
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    // Update setter to hash the password
+    public void setRawPassword(String rawPassword) {
+        this.hashedPassword = hashPassword(rawPassword);
+    }
+
     public List<Book> getBooks() {
         return books;
     }
@@ -78,5 +100,12 @@ public class User {
 
     public void setModifiedAt(LocalDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
+    }
+
+    private String hashPassword(String password) {
+        // Implement a secure password hashing algorithm (e.g., BCrypt)
+        // Return the hashed password
+
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }

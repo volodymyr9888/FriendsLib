@@ -11,19 +11,51 @@ public class AddBookController {
     @FXML
     private TextField authorField;
 
-    private ClientApp clientApp;
+    @FXML
+    private TextField yearField;
 
-    public void setClientApp(ClientApp clientApp) {
-        this.clientApp = clientApp;
+    private User currentUser; // Assuming you have a way to set the current user in this controller
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 
     @FXML
-    void handleAddBook(ActionEvent event) {
-        // Implement logic to add a book using clientApp.getLibraryClient()
+    private void handleAddBook(ActionEvent event) {
+        String title = titleField.getText();
+        String author = authorField.getText();
+        String year = yearField.getText();
+
+        if (title.isEmpty() || author.isEmpty()) {
+            // Display an error message or handle the case where title or author is empty
+            return;
+        }
+
+        // Assuming the DatabaseHandler has methods to add a book and create a record in user_books
+        Book addedBook = DatabaseHandler.addBook(title, author, year,currentUser.getId());
+
+        if (addedBook != null) {
+            // Book added successfully, now associate it with the current user
+            boolean success = DatabaseHandler.addBookToUser(currentUser.getId(), addedBook.getId());
+
+            if (success) {
+                // Successfully associated the book with the user
+                // You might want to show a success message or navigate to another scene
+                System.out.println("Book added and associated with the user successfully.");
+            } else {
+                // Failed to associate the book with the user
+                // Handle this case accordingly
+                System.out.println("Failed to associate the book with the user.");
+            }
+        } else {
+            // Failed to add the book
+            // Handle this case accordingly
+            System.out.println("Failed to add the book.");
+        }
     }
 
-    @FXML
-    void handleBack(ActionEvent event) throws Exception {
-        clientApp.showWelcomeScene();
+    public void handleBack(ActionEvent actionEvent) {
     }
+
+    // Other methods, if needed
 }

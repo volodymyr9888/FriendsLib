@@ -6,6 +6,7 @@ module com.example.friendslib {
     requires com.dlsc.formsfx;
     requires java.rmi;
     requires java.sql;
+    requires jbcrypt;
 
     opens com.example.friendslib to javafx.fxml;
     exports com.example.friendslib;
