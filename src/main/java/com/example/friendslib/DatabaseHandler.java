@@ -2,6 +2,8 @@ package com.example.friendslib;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -276,6 +278,50 @@ public class DatabaseHandler {
                 + ")";
         try (PreparedStatement preparedStatement = connection.prepareStatement(createUserBooksTableQuery)) {
             preparedStatement.execute();
+        }
+    }
+
+    public List<Book> getAllBooks() {
+        List<Book> books = new ArrayList<>();
+
+        try (Connection connection = getConnection()) {
+            String query = "SELECT books.id, books.title, books.author, books.year, books.owned_by, users.full_name AS ownerName " +
+                    "FROM books " +
+                    "INNER JOIN users ON books.owned_by = users.id";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        int bookId = resultSet.getInt("id");
+                        String title = resultSet.getString("title");
+                        String author = resultSet.getString("author");
+                        String year = resultSet.getString("year");
+                        int ownerId = resultSet.getInt("owned_by");
+                        String ownedBy = resultSet.getString("ownerName");
+//                        int wasAddedBy = resultSet.getInt("was_added_by");
+
+                        Book book = new Book(bookId, title, author, year, ownerId, ownedBy);
+                        books.add(book);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately
+        }
+
+        return books;
+    }
+
+    public void deleteBook(Book book) {
+        try (Connection connection = getConnection()) {
+            String query = "DELETE FROM books WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, book.getId());
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately
         }
     }
 

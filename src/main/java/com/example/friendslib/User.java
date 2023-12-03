@@ -15,6 +15,8 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
+    private List<Role> roles; // Assuming a user can have multiple roles
+
     public User(String fullName, String username, String rawPassword, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.fullName = fullName;
         this.username = username;
@@ -107,5 +109,13 @@ public class User {
         // Return the hashed password
 
         return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

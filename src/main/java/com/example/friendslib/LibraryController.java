@@ -54,10 +54,23 @@ public class LibraryController {
 
     @FXML
     private void handleShowBooks(ActionEvent event) {
-        // Switch to the Register view
+
+        if (currentUser != null) {
+            // Successful login, navigate to the next scene
+            System.out.println("Successful switched to show books scene");
+            loadScene("BooksView.fxml", event, currentUser);
+            // ...
+        } else {
+            // Invalid credentials, show an error message
+            showError("Invalid credentials");
+            System.out.println("Invalid credentials");
+            // ...
+        }
+
+        /*// Switch to the Register view
         if (sceneManager != null) {
             sceneManager.switchScene("BooksView.fxml");
-        }
+        }*/
     }
 
     private void showError(String message) {
@@ -68,6 +81,9 @@ public class LibraryController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
             Parent root = loader.load();
+
+            // Initialize the DatabaseHandler
+            DatabaseHandler databaseHandler = new DatabaseHandler();
 
             // Get the controller of the loaded FXML file
             Object controller = loader.getController();
@@ -80,6 +96,11 @@ public class LibraryController {
             // If the controller is an instance of AddBookController, set the currentUser
             if (controller instanceof LibraryController) {
                 ((LibraryController) controller).setCurrentUser(authenticatedUser);
+            }
+
+            // If the controller is an instance of AddBookController, set the currentUser
+            if (controller instanceof BooksViewController) {
+                ((BooksViewController) controller).setDatabaseHandler(databaseHandler);
             }
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

@@ -13,6 +13,8 @@ public class Book {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
+    private String ownerName;
+
     public Book(String title, String author, String year, int wasAddedBy, int ownedBy, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.title = title;
         this.author = author;
@@ -32,6 +34,15 @@ public class Book {
         this.ownedBy = ownedBy;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
+    }
+
+    public Book(int id, String title, String author, String year, int owned_by_id, String ownerName) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.year = year;
+        this.ownedBy = owned_by_id;
+        this.ownerName = ownerName;
     }
 
     // Getters and setters for all fields
@@ -98,6 +109,10 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
     }
 }
 
