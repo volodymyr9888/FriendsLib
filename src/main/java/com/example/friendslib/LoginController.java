@@ -14,6 +14,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginController {
 
@@ -49,7 +51,21 @@ public class LoginController {
         if (authenticatedUser != null) {
             // Successful login, navigate to the next scene
             System.out.println("Successful login");
-            loadScene("LibraryView.fxml", event, authenticatedUser);
+            List<Role> userRoles =  authenticatedUser.getRoles();
+            System.out.println("User " + authenticatedUser.getFullName() + "has " + userRoles.size() + " roles.");
+            userRoles.forEach((role) -> System.out.println("User " + authenticatedUser.getFullName() + " has roles = " + role.getName()));
+
+            Role adminRole = DatabaseHandler.getRoleById(1);
+
+            userRoles.forEach(role -> {
+                if (role.equals(adminRole)) {
+                    System.out.println("User is admin load scene LibraryView for admin");
+                    loadScene("AdminLibraryView.fxml", event, authenticatedUser);
+                } else {
+                    loadScene("LibraryView.fxml", event, authenticatedUser);
+                }
+            });
+
             // ...
         } else {
             // Invalid credentials, show an error message

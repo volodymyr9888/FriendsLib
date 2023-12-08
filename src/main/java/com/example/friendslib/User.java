@@ -37,6 +37,16 @@ public class User {
 //        this.books = books;
     }
 
+    public User(int id, String fullName, String username, String password, LocalDateTime createdAt, LocalDateTime modifiedAt, List<Role> roles) {
+        this.id = id;
+        this.fullName = fullName;
+        this.username = username;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.roles = roles;
+    }
+
     // Getters and setters for all fields
 
     public int getId() {

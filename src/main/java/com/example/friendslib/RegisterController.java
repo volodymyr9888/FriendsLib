@@ -61,7 +61,8 @@ public class RegisterController {
 
         if (registrationSuccess) {
             System.out.println("User registration successful!");
-            loadScene("AddBookScene.fxml", event, newUser);
+            loadScene("LibraryView.fxml", event, newUser);
+//            loadScene("AddBookScene.fxml", event, newUser);
             // Optionally, you can add logic to navigate to another view after registration
         } else {
             System.out.println("User registration failed.");
@@ -91,6 +92,14 @@ public class RegisterController {
             // If the controller is an instance of AddBookController, set the currentUser
             if (controller instanceof AddBookController) {
                 ((AddBookController) controller).setCurrentUser(authenticatedUser);
+            }
+
+            if (controller instanceof BooksViewController) {
+                ((BooksViewController) controller).setCurrentUser(authenticatedUser);
+            }
+
+            if (controller instanceof LibraryController) {
+                ((LibraryController) controller).setCurrentUser(authenticatedUser);
             }
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

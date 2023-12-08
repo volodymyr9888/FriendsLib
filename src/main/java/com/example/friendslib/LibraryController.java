@@ -73,6 +73,28 @@ public class LibraryController {
         }*/
     }
 
+    @FXML
+    private void handleAdminShowBooks(ActionEvent event) {
+        System.out.println("current User = " + currentUser);
+        if (currentUser != null) {
+            // Successful login, navigate to the next scene
+            System.out.println("Successful switched to show books scene");
+            loadScene("AdminBooksView.fxml", event, currentUser);
+            // ...
+        } else {
+            // Invalid credentials, show an error message
+            showError("Invalid credentials");
+            System.out.println("Invalid credentials");
+            // ...
+        }
+    }
+
+    @FXML
+    private void handleAdminRegisterUser(ActionEvent event) {
+            System.out.println("Successful switched to register user scene");
+            loadScene("RegisterUser.fxml", event);
+    }
+
     private void showError(String message) {
         errorLabel.setText(message);
     }
@@ -97,6 +119,32 @@ public class LibraryController {
             if (controller instanceof LibraryController) {
                 ((LibraryController) controller).setCurrentUser(authenticatedUser);
             }
+
+            // If the controller is an instance of AddBookController, set the currentUser
+            if (controller instanceof BooksViewController) {
+                ((BooksViewController) controller).setDatabaseHandler(databaseHandler);
+            }
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("FriendsLib App");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately
+        }
+    }
+
+    private void loadScene(String fxmlFileName, ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
+            Parent root = loader.load();
+
+            // Initialize the DatabaseHandler
+            DatabaseHandler databaseHandler = new DatabaseHandler();
+
+            // Get the controller of the loaded FXML file
+            Object controller = loader.getController();
 
             // If the controller is an instance of AddBookController, set the currentUser
             if (controller instanceof BooksViewController) {

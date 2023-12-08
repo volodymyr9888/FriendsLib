@@ -88,7 +88,7 @@ public class DatabaseHandler {
             try (PreparedStatement userRoleStatement = connection.prepareStatement(insertUserRoleQuery)) {
                 // Assuming 'user' role has an ID of 1, adjust accordingly
                 userRoleStatement.setInt(1, user.getId());
-                userRoleStatement.setInt(2, 1); // Assuming 'user' role has an ID of 1, adjust accordingly
+                userRoleStatement.setInt(2, 2); // Assuming 'user' role has an ID of 2, adjust accordingly
                 userRoleStatement.setObject(3, user.getCreatedAt());
                 userRoleStatement.setObject(4, user.getModifiedAt());
 
@@ -114,6 +114,29 @@ public class DatabaseHandler {
                 return resultSet.getInt(1) > 0;
             }
         }
+    }
+
+    public static Role getRoleById(int roleId) {
+        Role role = null;
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT id, name FROM roles WHERE id = ?")) {
+
+            preparedStatement.setInt(1, roleId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    String roleName = resultSet.getString("name");
+
+                    role = new Role(roleId, roleName);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception based on your application's needs
+        }
+
+        return role;
     }
 
     private static void associateUserWithBooks(int userId, Integer bookId) {
@@ -143,12 +166,9 @@ public class DatabaseHandler {
                         // Verify the hashed password
                         String hashedPassword = resultSet.getString("password");
                         if (BCrypt.checkpw(password, hashedPassword)) {
-                            // Authentication successful, return the User object
+                            // Authentication successful, return the User object with roles
                             int userId = resultSet.getInt("id");
-                            String fullName = resultSet.getString("full_name");
-                            String user_name = resultSet.getString("username");
-                            String pass_word = resultSet.getString("password");
-                            return new User(userId, fullName, user_name,pass_word);
+                            return getUserWithRolesById(userId);
                         }
                     }
                 }
@@ -161,6 +181,48 @@ public class DatabaseHandler {
         // Return null if authentication fails
         return null;
     }
+
+    public static User getUserWithRolesById(int userId) {
+        User user = null;
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT users.id, users.full_name, users.username, users.password, " +
+                             "users.created_at, users.modified_at, roles.id as role_id, roles.name as role_name " +
+                             "FROM users " +
+                             "LEFT JOIN user_roles ON users.id = user_roles.user_id " +
+                             "LEFT JOIN roles ON user_roles.role_id = roles.id " +
+                             "WHERE users.id = ?")) {
+
+            preparedStatement.setInt(1, userId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    if (user == null) {
+                        int id = resultSet.getInt("id");
+                        String fullName = resultSet.getString("full_name");
+                        String username = resultSet.getString("username");
+                        String password = resultSet.getString("password");
+                        LocalDateTime createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+                        LocalDateTime modifiedAt = resultSet.getTimestamp("modified_at").toLocalDateTime();
+
+                        user = new User(id, fullName, username, password, createdAt, modifiedAt, new ArrayList<>());
+                    }
+
+                    int roleId = resultSet.getInt("role_id");
+                    String roleName = resultSet.getString("role_name");
+
+                    Role role = new Role(roleId, roleName);
+                    user.getRoles().add(role);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception based on your application's needs
+        }
+
+        return user;
+    }
+
 
     public static Book addBook(String title, String author, String year, int addedByUserId) {
         ensureTablesExist(); // Ensure that necessary tables exist
@@ -312,7 +374,7 @@ public class DatabaseHandler {
         return books;
     }
 
-    public void deleteBook(Book book) {
+    public static void deleteBook(Book book) {
         try (Connection connection = getConnection()) {
             String query = "DELETE FROM books WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -322,6 +384,50 @@ public class DatabaseHandler {
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle the exception appropriately
+        }
+    }
+
+    public static boolean deleteBookById(int bookId) {
+        try (Connection connection = getConnection()) {
+            // Check if the book is associated with any user_books records
+            if (hasAssociatedUserBooks(connection, bookId)) {
+                // Delete associated user_books records
+                deleteUserBooksByBookId(connection, bookId);
+            }
+
+            // Now, delete the book from the books table
+            String deleteBookQuery = "DELETE FROM books WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteBookQuery)) {
+                preparedStatement.setInt(1, bookId);
+                int rowsAffected = preparedStatement.executeUpdate();
+
+                // Return true if at least one row was affected, indicating successful deletion
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately
+        }
+
+        // Return false in case of any errors or if no rows were affected
+        return false;
+    }
+
+    private static boolean hasAssociatedUserBooks(Connection connection, int bookId) throws SQLException {
+        String query = "SELECT * FROM user_books WHERE book_id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, bookId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next(); // Returns true if there are associated user_books records
+            }
+        }
+    }
+
+    private static void deleteUserBooksByBookId(Connection connection, int bookId) throws SQLException {
+        String deleteUserBooksQuery = "DELETE FROM user_books WHERE book_id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteUserBooksQuery)) {
+            preparedStatement.setInt(1, bookId);
+            preparedStatement.executeUpdate();
         }
     }
 

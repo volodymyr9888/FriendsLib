@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WelcomeView.fxml -->
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.friendslib.LibraryController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <Text text="Welcome to FriendsLib Library!"/>
+    <Label fx:id="errorLabel" textFill="red"/>
+    <HBox>
+        <Button text="To Add book view" onAction="#handleAddBook"/>
+        <Button text="Show All Books" onAction="#handleAdminShowBooks"/>
+        <Button text="Register User" onAction="#handleAdminRegisterUser"/>
+    </HBox>
+
+</VBox>
