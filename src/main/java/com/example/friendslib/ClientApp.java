@@ -23,6 +23,7 @@ public class ClientApp extends Application {
         // Pass the SceneManager instance to the controllers
         WelcomeController welcomeController = loadScene("WelcomeView.fxml");
         welcomeController.setSceneManager(sceneManager);
+        System.out.println("scene manager from = " + this.getClass().getName() + " " + sceneManager);
 
 //        showWelcomeScene();
     }

@@ -45,7 +45,7 @@ public class Book {
         this.ownerName = ownerName;
     }
 
-    // Getters and setters for all fields
+
 
     public int getId() {
         return id;

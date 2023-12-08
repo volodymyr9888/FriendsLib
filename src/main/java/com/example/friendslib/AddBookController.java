@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+
 public class AddBookController {
     @FXML
     private TextField titleField;
@@ -13,7 +14,8 @@ public class AddBookController {
 
     @FXML
     private TextField yearField;
-
+    @FXML
+    private TextField idField;
     private User currentUser; // Assuming you have a way to set the current user in this controller
 
     public void setCurrentUser(User currentUser) {
@@ -57,5 +59,4 @@ public class AddBookController {
     public void handleBack(ActionEvent actionEvent) {
     }
 
-    // Other methods, if needed
 }

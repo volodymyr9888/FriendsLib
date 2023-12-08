@@ -395,21 +395,20 @@ public class DatabaseHandler {
                 deleteUserBooksByBookId(connection, bookId);
             }
 
-            // Now, delete the book from the books table
+
             String deleteBookQuery = "DELETE FROM books WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(deleteBookQuery)) {
                 preparedStatement.setInt(1, bookId);
                 int rowsAffected = preparedStatement.executeUpdate();
 
-                // Return true if at least one row was affected, indicating successful deletion
                 return rowsAffected > 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the exception appropriately
+
         }
 
-        // Return false in case of any errors or if no rows were affected
+
         return false;
     }
 
@@ -418,7 +417,7 @@ public class DatabaseHandler {
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, bookId);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                return resultSet.next(); // Returns true if there are associated user_books records
+                return resultSet.next();
             }
         }
     }

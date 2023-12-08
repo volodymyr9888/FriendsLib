@@ -30,6 +30,12 @@ public class RegisterController {
     @FXML
     private Label errorLabel;
 
+    private ClientApp.SceneManager sceneManager;
+
+    public void setSceneManager(ClientApp.SceneManager sceneManager) {
+        this.sceneManager = sceneManager;
+    }
+
     @FXML
     private void handleRegister(ActionEvent event) {
         // Ensure the users table is created
@@ -62,8 +68,6 @@ public class RegisterController {
         if (registrationSuccess) {
             System.out.println("User registration successful!");
             loadScene("LibraryView.fxml", event, newUser);
-//            loadScene("AddBookScene.fxml", event, newUser);
-            // Optionally, you can add logic to navigate to another view after registration
         } else {
             System.out.println("User registration failed.");
             // Handle the case where registration fails (e.g., duplicate username, database error, etc.)

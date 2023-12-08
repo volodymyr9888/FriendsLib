@@ -53,6 +53,12 @@ public class LibraryController {
     }
 
     @FXML
+    public void handleRegister(ActionEvent event) {
+        if (sceneManager != null) {
+            sceneManager.switchScene("RegisterView.fxml");
+        }
+    }
+    @FXML
     private void handleShowBooks(ActionEvent event) {
 
         if (currentUser != null) {
@@ -60,7 +66,9 @@ public class LibraryController {
             System.out.println("Successful switched to show books scene");
             loadScene("BooksView.fxml", event, currentUser);
             // ...
-        } else {
+        }
+
+        else {
             // Invalid credentials, show an error message
             showError("Invalid credentials");
             System.out.println("Invalid credentials");
@@ -160,5 +168,7 @@ public class LibraryController {
             // Handle the exception appropriately
         }
     }
+
+
 }
 

@@ -28,6 +28,12 @@ public class LoginController {
     @FXML
     private Label errorLabel;
 
+    private ClientApp.SceneManager sceneManager;
+
+    public void setSceneManager(ClientApp.SceneManager sceneManager) {
+        this.sceneManager = sceneManager;
+    }
+
     /*@FXML
     private void handleLogin() {
         // Code to handle login
@@ -60,6 +66,9 @@ public class LoginController {
             userRoles.forEach(role -> {
                 if (role.equals(adminRole)) {
                     System.out.println("User is admin load scene LibraryView for admin");
+                    LibraryController libraryController = new LibraryController();
+                    libraryController.setSceneManager(sceneManager);
+                    System.out.println("scene manager from = " + this.getClass().getName() + " " + sceneManager);
                     loadScene("AdminLibraryView.fxml", event, authenticatedUser);
                 } else {
                     loadScene("LibraryView.fxml", event, authenticatedUser);

@@ -22,8 +22,5 @@ public class MainController {
         // Implement logic to view all books using clientApp.getLibraryClient()
     }
 
-   /* @FXML
-    void handleLogout(ActionEvent event) throws Exception {
-        clientApp.showLoginScene();
-    }*/
+
 }

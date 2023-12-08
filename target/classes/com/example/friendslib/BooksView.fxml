@@ -9,10 +9,10 @@
     <Label text="All Books" style="-fx-font-size: 18px;"/>
     <TableView fx:id="booksTable" prefWidth="400">
         <columns>
-            <TableColumn text="Title" fx:id="titleColumn" />
-            <TableColumn text="Author" fx:id="authorColumn" />
-            <TableColumn text="Owner" fx:id="ownerColumn" />
-            <TableColumn text="Action" fx:id="actionColumn" />
+            <TableColumn fx:id="bookIdColumn" text="Book ID" />
+            <TableColumn fx:id="titleColumn" text="Title" />
+            <TableColumn fx:id="authorColumn" text="Author" />
+            <TableColumn fx:id="ownerColumn" text="Owner" />
         </columns>
     </TableView>
 </VBox>

@@ -1,5 +1,6 @@
 package com.example.friendslib;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,13 +14,13 @@ public class BooksViewController {
 
     @FXML
     private TableView<Book> booksTable;
-
+    @FXML
+    private TableColumn<Book, Integer> bookIdColumn;
     @FXML
     private TableColumn<Book, String> titleColumn;
 
     @FXML
     private TableColumn<Book, String> authorColumn;
-
     @FXML
     private TableColumn<Book, String> ownerColumn;
 
@@ -27,7 +28,8 @@ public class BooksViewController {
     private TextField bookIdField;
 
     private DatabaseHandler databaseHandler;
-    private User currentUser; // Assuming you have a way to set the current user in this controller
+    private User currentUser;
+
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
@@ -36,6 +38,7 @@ public class BooksViewController {
     @FXML
     private void initialize() {
         // Initialize columns
+        bookIdColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getId()).asObject());
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         ownerColumn.setCellValueFactory(new PropertyValueFactory<>("ownerName"));
@@ -84,4 +87,6 @@ public class BooksViewController {
             System.err.println("Invalid book ID format");
         }
     }
+
+
 }

@@ -7,7 +7,7 @@
     <Label style="-fx-font-size: 18px;" text="All Books" />
     <TableView fx:id="booksTable" prefWidth="300">
         <columns>
-            <TableColumn fx:id="titleID" text="Book ID" />
+            <TableColumn fx:id="bookIdColumn" text="Book ID" />
             <TableColumn fx:id="titleColumn" text="Title" />
             <TableColumn fx:id="authorColumn" text="Author" />
             <TableColumn fx:id="ownerColumn" text="Owner" />
