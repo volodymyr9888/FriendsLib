@@ -3,8 +3,9 @@ package com.example.friendslib;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
 
     private int id;
     private String fullName;
@@ -26,6 +27,8 @@ public class User {
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
+
+    public User() {};
 
 
     public User(int id, String fullName, String username, String rawPassword) {

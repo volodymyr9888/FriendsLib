@@ -14,7 +14,7 @@ public class MainController {
     @FXML
     void handleAddBook(ActionEvent event) throws Exception {
 //        clientApp.showAddBookScene();
-        clientApp.showWelcomeScene();
+//        clientApp.showWelcomeScene();
     }
 
     @FXML

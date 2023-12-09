@@ -8,10 +8,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
+import java.net.Socket;
 
 public class WelcomeController {
 
     private ClientApp.SceneManager sceneManager;
+
+    private Socket socket;
+
+    // Add this method to set the socket
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
 
     public void setSceneManager(ClientApp.SceneManager sceneManager) {
         this.sceneManager = sceneManager;
