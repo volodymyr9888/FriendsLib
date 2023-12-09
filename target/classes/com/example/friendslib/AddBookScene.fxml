@@ -12,5 +12,4 @@
     <Label text="Year:"/>
     <TextField fx:id="yearField" promptText="Enter author"/>
     <Button text="Add Book" onAction="#handleAddBook"/>
-    <Button text="Back" onAction="#handleBack"/>
 </VBox>
