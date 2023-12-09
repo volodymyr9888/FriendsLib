@@ -22,6 +22,7 @@ public class LibraryServerImpl extends UnicastRemoteObject implements LibrarySer
 
     @Override
     public boolean registerUser(String username, String password) throws RemoteException {
+        System.out.println("I AM HERE = " + getClass().getName());
         return false;
     }
 

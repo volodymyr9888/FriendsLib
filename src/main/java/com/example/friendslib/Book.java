@@ -11,6 +11,8 @@ public class Book {
     private int wasAddedBy; // User ID who added the book
     private int ownedBy; // User ID who owns the book
     private LocalDateTime createdAt;
+
+    private String assignet;
     private LocalDateTime modifiedAt;
 
     private String ownerName;
@@ -35,7 +37,16 @@ public class Book {
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
-
+/*    public Book(int id, String title, String author, String year, int assignet, int ownedBy, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.year = year;
+        this.wasAddedBy = wasAddedBy;
+        this.assignet = String.valueOf(assignet);
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }*/
     public Book(int id, String title, String author, String year, int owned_by_id, String ownerName) {
         this.id = id;
         this.title = title;

@@ -121,7 +121,9 @@ public class LoginController {
             if (controller instanceof AddBookController) {
                 ((AddBookController) controller).setCurrentUser(authenticatedUser);
             }
-
+            if (controller instanceof AdminAddBookController) {
+                ((AdminAddBookController) controller).setCurrentUser(authenticatedUser);
+            }
             // If the controller is an instance of AddBookController, set the currentUser
             if (controller instanceof LibraryController) {
                 ((LibraryController) controller).setCurrentUser(authenticatedUser);

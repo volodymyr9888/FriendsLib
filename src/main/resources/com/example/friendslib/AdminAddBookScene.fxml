@@ -3,7 +3,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.friendslib.AddBookController">
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.friendslib.AdminAddBookController">
     <Label text="Add a New Book" style="-fx-font-size: 18px;"/>
     <Label text="Title:"/>
     <TextField fx:id="titleField" promptText="Enter book title"/>
@@ -11,5 +11,7 @@
     <TextField fx:id="authorField" promptText="Enter author"/>
     <Label text="Year:"/>
     <TextField fx:id="yearField" promptText="Enter author"/>
-    <Button text="Add Book" onAction="#handleAddBook"/>
+    <Label text="Assign to user:"/>
+    <TextField fx:id="assignedtoField" promptText="Enter author"/>
+    <Button text="Add Book" onAction="#handleAdminAddBook"/>
 </VBox>

@@ -35,22 +35,6 @@ public class DatabaseHandler {
         }
     }
 
-    public static void registerUser(String fullName, String username, String password, int bookId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO users (full_name, username, password, book_id, created_at, modified_at) VALUES (?, ?, ?, ?, NOW(), NOW())"
-             )) {
-            preparedStatement.setString(1, fullName);
-            preparedStatement.setString(2, username);
-            preparedStatement.setString(3, password);
-            preparedStatement.setInt(4, bookId);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     // Updated registerUser method
     public static boolean registerUser(User user) {
         try (Connection connection = getConnection()) {
@@ -262,7 +246,44 @@ public class DatabaseHandler {
 
         return null;
     }
+    public static Book AdminaddBook(String title, String author, String year,String assignet, int addedByUserId) {
+        ensureTablesExist(); // Ensure that necessary tables exist
 
+        try (Connection connection = getConnection()) {
+            // Insert book information
+            String insertBookQuery = "INSERT INTO books (title, author, year, was_added_by, owned_by, created_at, modified_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement bookStatement = connection.prepareStatement(insertBookQuery, Statement.RETURN_GENERATED_KEYS)) {
+                bookStatement.setString(1, title);
+                bookStatement.setString(2, author);
+                bookStatement.setString(3, year);
+                bookStatement.setInt(4, addedByUserId);
+                bookStatement.setInt(5, Integer.parseInt(assignet));
+                bookStatement.setObject(6, LocalDateTime.now());
+                bookStatement.setObject(7, LocalDateTime.now());
+
+                int affectedRows = bookStatement.executeUpdate();
+
+                if (affectedRows == 0) {
+                    throw new SQLException("Failed to add the book, no rows affected.");
+                }
+
+                // Retrieve the auto-generated book ID
+                try (ResultSet generatedKeys = bookStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int bookId = generatedKeys.getInt(1);
+                        return new Book(bookId, title, author, year, addedByUserId, Integer.parseInt(assignet), LocalDateTime.now(), LocalDateTime.now());
+                    } else {
+                        throw new SQLException("Failed to get the book ID after insertion.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately
+        }
+
+        return null;
+    }
     public static boolean addBookToUser(int userId, int bookId) {
         try (Connection connection = getConnection()) {
             // Insert user_books information

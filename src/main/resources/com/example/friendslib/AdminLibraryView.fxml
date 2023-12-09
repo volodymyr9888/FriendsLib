@@ -18,7 +18,7 @@
     <HBox>
         <Button text="To Add book view" onAction="#handleAddBook"/>
         <Button text="Show All Books" onAction="#handleAdminShowBooks"/>
-        <Button text="Register User" onAction="#handleRegister"/>
+        <Button text="Register User" onAction="#handleAdminRegister"/>
     </HBox>
 
 </VBox>

@@ -9,9 +9,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class LibraryController {
 
@@ -22,6 +24,19 @@ public class LibraryController {
 
     private User currentUser; // Assuming you have a way to set the current user in this controller
 
+    @FXML
+    private TextField titleField;
+
+    @FXML
+    private TextField authorField;
+
+    @FXML
+    private TextField yearField;
+    @FXML
+    private TextField idField;
+    @FXML
+    private TextField assignedtoField;
+
     public void setSceneManager(ClientApp.SceneManager sceneManager) {
         this.sceneManager = sceneManager;
     }
@@ -31,25 +46,65 @@ public class LibraryController {
     }
 
     @FXML
+    private void handleAdminAddBook(ActionEvent event) {
+        String title = titleField.getText();
+        String author = authorField.getText();
+        String year = yearField.getText();
+        String assigned = assignedtoField.getText();
+        if (title.isEmpty() || author.isEmpty()) {
+            // Display an error message or handle the case where title or author is empty
+            return;
+        }
+
+        // Assuming the DatabaseHandler has methods to add a book and create a record in user_books
+        Book addedBook = DatabaseHandler.AdminaddBook(title, author, year, assigned, currentUser.getId());
+
+        if (addedBook != null) {
+            // Book added successfully, now associate it with the current user
+            boolean success = DatabaseHandler.addBookToUser(currentUser.getId(), addedBook.getId());
+
+            if (success) {
+                // Successfully associated the book with the user
+                // You might want to show a success message or navigate to another scene
+                System.out.println("Book added and associated with the user successfully.");
+            } else {
+                // Failed to associate the book with the user
+                // Handle this case accordingly
+                System.out.println("Failed to associate the book with the user.");
+            }
+        } else {
+            // Failed to add the book
+            // Handle this case accordingly
+            System.out.println("Failed to add the book.");
+        }
+    }
+
+    @FXML
     private void handleAddBook(ActionEvent event) {
 
         if (currentUser != null) {
             // Successful login, navigate to the next scene
+
             System.out.println("Successful switched to add book scene");
-            loadScene("AddBookScene.fxml", event, currentUser);
-            // ...
+            Role adminRole = DatabaseHandler.getRoleById(1);
+            List<Role> userRoles =  currentUser.getRoles();
+            userRoles.forEach(role -> {
+                if (role.equals(adminRole)) {
+                    System.out.println("User is admin load scene AdminAddBooks for admin");
+//                    LibraryController libraryController = new LibraryController();
+//                    libraryController.setSceneManager(sceneManager);
+//                    System.out.println("scene manager from = " + this.getClass().getName() + " " + sceneManager);
+                    loadScene("AdminAddBookScene.fxml", event, currentUser);
+                } else {
+                    loadScene("AddBookScene.fxml", event, currentUser);
+                }
+            });
+
         } else {
             // Invalid credentials, show an error message
             showError("Invalid credentials");
             System.out.println("Invalid credentials");
-            // ...
         }
-
-
-//        // Switch to the Login view
-//        if (sceneManager != null) {
-//            sceneManager.switchScene("AddBookView.fxml");
-//        }
     }
 
     @FXML
@@ -96,6 +151,20 @@ public class LibraryController {
             // ...
         }
     }
+    @FXML
+    private void handleAdminRegister(ActionEvent event) {
+        if (currentUser != null) {
+            // Successful login, navigate to the next scene
+            System.out.println("Successful switched to show books scene");
+            loadScene("AdminRegisterUserView.fxml", event, currentUser);
+            // ...
+        } else {
+            // Invalid credentials, show an error message
+            showError("Invalid credentials");
+            System.out.println("Invalid credentials");
+            // ...
+        }
+    }
 
     @FXML
     private void handleAdminRegisterUser(ActionEvent event) {
@@ -131,6 +200,10 @@ public class LibraryController {
             // If the controller is an instance of AddBookController, set the currentUser
             if (controller instanceof BooksViewController) {
                 ((BooksViewController) controller).setDatabaseHandler(databaseHandler);
+            }
+
+            if (controller instanceof AdminAddBookController) {
+                ((AdminAddBookController) controller).setCurrentUser(authenticatedUser);
             }
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

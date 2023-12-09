@@ -10,6 +10,7 @@ public class LibraryClientImpl implements LibraryClient {
     public LibraryClientImpl() {
         try {
             libraryServer = (LibraryServer) Naming.lookup("rmi://localhost:1098/LibraryServer");
+            System.out.println("I AM HERE = " + getClass().getName());
         } catch (Exception e) {
             e.printStackTrace();
         }
